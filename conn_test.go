@@ -2,6 +2,7 @@ package http
 
 import (
 	"testing"
+	"time"
 )
 
 var _ Conn = new(conn)
@@ -12,9 +13,9 @@ type countingDialer struct {
 	count int
 }
 
-func (c *countingDialer) Dial(nw, addr string) (Conn, error) {
+func (c *countingDialer) Dial(nw, addr string, timeout time.Duration) (Conn, error) {
 	c.count++
-	return c.Dialer.Dial(nw, addr)
+	return c.Dialer.Dial(nw, addr, DEFAULT_TIMEOUT)
 }
 
 var dialCountTests = []struct {
@@ -22,32 +23,32 @@ var dialCountTests = []struct {
 	expected int // expected dial counts
 }{
 	{func(t *testing.T, s *server, d Dialer) {
-		conn, err := d.Dial("tcp", s.Addr().String())
+		conn, err := d.Dial("tcp", s.Addr().String(), DEFAULT_TIMEOUT)
 		if err != nil {
 			t.Fatal(err)
 		}
 		conn.Close()
 	}, 1},
 	{func(t *testing.T, s *server, d Dialer) {
-		conn, err := d.Dial("tcp", s.Addr().String())
+		conn, err := d.Dial("tcp", s.Addr().String(), DEFAULT_TIMEOUT)
 		if err != nil {
 			t.Fatal(err)
 		}
 		conn.Close()
-		conn, err = d.Dial("tcp", s.Addr().String())
+		conn, err = d.Dial("tcp", s.Addr().String(), DEFAULT_TIMEOUT)
 		if err != nil {
 			t.Fatal(err)
 		}
 		conn.Close()
 	}, 2},
 	{func(t *testing.T, s *server, d Dialer) {
-		conn, err := d.Dial("tcp", s.Addr().String())
+		conn, err := d.Dial("tcp", s.Addr().String(), DEFAULT_TIMEOUT)
 		if err != nil {
 			t.Fatal(err)
 		}
 		c1 := conn
 		conn.Release()
-		conn, err = d.Dial("tcp", s.Addr().String())
+		conn, err = d.Dial("tcp", s.Addr().String(), DEFAULT_TIMEOUT)
 		if err != nil {
 			t.Fatal(err)
 		}

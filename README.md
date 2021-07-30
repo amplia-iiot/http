@@ -81,7 +81,7 @@ The roadmap for the project is captured as open issues in GitHub.
 
 # Contributions and feedback
 
-Please raise issues and suggestions on the GitHub project page, <https://github.com/gorilla/http/issues>.
+Please raise issues and suggestions on the GitHub project page, <https://github.com/amplia-iiot/http/issues>.
 
 Questions and discussion can also be directed to the general Gorilla mailing list <https://groups.google.com/group/gorilla-web>.
 

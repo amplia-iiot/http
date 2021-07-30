@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/http/client"
+	"github.com/amplia-iiot/http/client"
 )
 
 const postBody = "banananana"
@@ -496,7 +496,7 @@ var fromResponseTests = []struct {
 	body    io.Reader
 	headers map[string][]string
 }{
-// TODO(dfc)
+	// TODO(dfc)
 }
 
 func TestFromResponse(t *testing.T) {

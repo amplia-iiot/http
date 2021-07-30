@@ -5,7 +5,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/gorilla/http/client"
+	"github.com/amplia-iiot/http/client"
 )
 
 var toHeadersTests = []struct {

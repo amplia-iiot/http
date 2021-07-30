@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/gorilla/http"
+	"github.com/amplia-iiot/http"
 )
 
 func main() {

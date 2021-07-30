@@ -7,8 +7,9 @@ import (
 	"io/ioutil"
 	stdurl "net/url"
 	"strings"
+	"time"
 
-	"github.com/gorilla/http/client"
+	"github.com/amplia-iiot/http/client"
 )
 
 // Client implements a high level HTTP client. Client methods can be called concurrently
@@ -18,6 +19,18 @@ type Client struct {
 
 	// FollowRedirects instructs the client to follow 301/302 redirects when idempotent.
 	FollowRedirects bool
+
+	//Timeout to dial /*amplia*/
+	Timeout time.Duration
+}
+
+func NewClient(timeout time.Duration) Client {
+	client := Client{
+		dialer:          new(dialer),
+		FollowRedirects: true,
+		Timeout:         timeout,
+	}
+	return client
 }
 
 // Do sends an HTTP request and returns an HTTP response. If the response body is non nil
@@ -30,11 +43,21 @@ func (c *Client) Do(method, url string, headers map[string][]string, body io.Rea
 	if err != nil {
 		return client.Status{}, nil, nil, err
 	}
+	/** Amplia **/
 	host := u.Host
-	headers["Host"] = []string{host}
-	if !strings.Contains(host, ":") {
-		host += ":80"
+	hostHeaders := headers["Host"]
+	if hostHeaders == nil {
+		headers["Host"] = []string{host}
+
+	} else if hostHeaders[0] == "" {
+		delete(headers, "Host")
 	}
+	// host := u.Host
+	// headers["Host"] = []string{host}
+	// if !strings.Contains(host, ":") {
+	// host += ":80"
+	// }
+	/** Amplia **/
 	path := u.Path
 	if path == "" {
 		path = "/"
@@ -42,7 +65,7 @@ func (c *Client) Do(method, url string, headers map[string][]string, body io.Rea
 	if u.RawQuery != "" {
 		path += "?" + u.RawQuery
 	}
-	conn, err := c.dialer.Dial("tcp", host)
+	conn, err := c.dialer.Dial("tcp", host, c.Timeout)
 	if err != nil {
 		return client.Status{}, nil, nil, err
 	}

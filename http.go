@@ -6,14 +6,17 @@
 // These high level functions are expected to change. Your feedback on their form
 // and utility is warmly requested.
 //
-// Please raise issues at https://github.com/gorilla/http/issues.
+// Please raise issues at https://github.com/amplia-iiot/http/issues.
 //
 // For lower level http implementations, see gorilla/http/client.
 package http
 
 import (
 	"io"
+	"time"
 )
+
+const DEFAULT_TIMEOUT = 3
 
 // DefaultClient is the default http Client used by this package.
 // It's defaults are expected to represent the best practice
@@ -22,6 +25,7 @@ import (
 var DefaultClient = Client{
 	dialer:          new(dialer),
 	FollowRedirects: true,
+	Timeout:         DEFAULT_TIMEOUT * time.Second,
 }
 
 // Get issues a GET request using the DefaultClient and writes the result to
